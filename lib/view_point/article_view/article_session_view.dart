@@ -10,12 +10,17 @@ class ArticleSessionView extends StatelessWidget {
       required this.title,
       required this.onPressed,
       required this.articleList,
-      required this.onTap})
+      required this.onTap,
+       this.isShowMoreIconVisible=true,
+        required this.controller
+      })
       : super(key: key);
   final String title;
   final Function onPressed;
   final List<ArticleVO> articleList;
   final Function(ArticleVO) onTap;
+  final bool isShowMoreIconVisible;
+  final PageController controller;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -25,6 +30,7 @@ class ArticleSessionView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ArticleTitleAndShowMoreView(
+              isShowMoreIconVisible: isShowMoreIconVisible,
               title: title,
               onPressed: () => onPressed(),
             ),
@@ -33,6 +39,7 @@ class ArticleSessionView extends StatelessWidget {
                 child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: spacing1x),
                     child: PageView.builder(
+                      controller: controller,
                       scrollDirection: Axis.horizontal,
                       itemCount: articleList.length,
                       itemBuilder: (_, index) => InkWell(
@@ -53,15 +60,18 @@ class ArticleTitleAndShowMoreView extends StatelessWidget {
     Key? key,
     required this.title,
     required this.onPressed,
+    this.isShowMoreIconVisible=true
   }) : super(key: key);
   final String title;
   final Function onPressed;
+  final bool isShowMoreIconVisible;
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(left: spacing1x),
         child: MangLightNovelArticleTitleAndShowMoreWidget(
+          isShowMoreIconVisible: isShowMoreIconVisible,
           title: title,
           onPressed: () {
             onPressed();

@@ -23,4 +23,7 @@ class ArticleDAO {
   }
 
   List<ArticleVO>? getAllArticles() => _getArticleBox().values.toList();
+
+  ArticleVO getArticleByID(String id)=>_getArticleBox().values.toList().where((element) => element.artId.toString()==id).first;
+
 }

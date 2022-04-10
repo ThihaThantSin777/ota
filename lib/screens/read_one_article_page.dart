@@ -25,7 +25,21 @@ class ReadArticlePage extends StatelessWidget {
                   )
                 : CustomScrollView(
                     slivers: [
-                      ArticleSilverAppBarAndImageView(articleVO: articleVO),
+                      Selector<ReadArticleProvider, bool>(
+                          selector: (_, readArticleProvider) =>
+                          readArticleProvider.getIsFavorite,
+                          builder: (_,isFavorite,child){
+                            ReadArticleProvider readArticleProvider=Provider.of(_,listen: false);
+                            return    ArticleSilverAppBarAndImageView(
+                                articleVO: articleVO,
+                                onPressed: (){
+                                  readArticleProvider.changeFavorite(articleVO.artId.toString(), isFavorite);
+                                },
+                              isFavorite: isFavorite,
+                            );
+                          }
+
+                      ),
                       Selector<ReadArticleProvider, List<ReadArticleVO>?>(
                         selector: (_, readArticleProvider) =>
                             readArticleProvider.getReadArticleList,

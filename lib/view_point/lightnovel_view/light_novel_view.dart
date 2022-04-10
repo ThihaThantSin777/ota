@@ -10,12 +10,17 @@ class LightNovelSessionView extends StatelessWidget {
       required this.title,
       required this.onPressed,
       required this.lightNovelVO,
-      required this.onTap})
+      required this.onTap,
+      this.isShowMoreIconVisible=true,
+        required this.controller,
+      })
       : super(key: key);
   final String title;
   final Function onPressed;
   final List<LightNovelVO> lightNovelVO;
   final Function(LightNovelVO) onTap;
+  final bool isShowMoreIconVisible;
+  final ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +33,10 @@ class LightNovelSessionView extends StatelessWidget {
             LightNovelTitleAndShowMoreView(
               title: title,
               onPressed: () => onPressed(),
+              isShowMoreIconVisible: isShowMoreIconVisible,
             ),
             LightNovelImageAndTitleView(
+              controller: controller,
               lightNovelVO: lightNovelVO,
               onTap: (lightNovel) => onTap(lightNovel),
             ),
@@ -40,11 +47,12 @@ class LightNovelSessionView extends StatelessWidget {
 
 class LightNovelImageAndTitleView extends StatelessWidget {
   const LightNovelImageAndTitleView(
-      {Key? key, required this.lightNovelVO, required this.onTap})
+      {Key? key, required this.lightNovelVO, required this.onTap,required this.controller})
       : super(key: key);
 
   final List<LightNovelVO> lightNovelVO;
   final Function(LightNovelVO) onTap;
+  final ScrollController controller;
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -52,6 +60,7 @@ class LightNovelImageAndTitleView extends StatelessWidget {
       child: Container(
           margin: const EdgeInsets.only(left: spacing1x),
           child: ListView.builder(
+            controller: controller,
               scrollDirection: Axis.horizontal,
               itemCount: lightNovelVO.length,
               itemBuilder: (_, index) => InkWell(
@@ -70,15 +79,18 @@ class LightNovelTitleAndShowMoreView extends StatelessWidget {
     Key? key,
     required this.title,
     required this.onPressed,
+    this.isShowMoreIconVisible=true,
   }) : super(key: key);
   final String title;
   final Function onPressed;
+  final bool isShowMoreIconVisible;
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(left: spacing1x),
         child: MangLightNovelArticleTitleAndShowMoreWidget(
+          isShowMoreIconVisible: isShowMoreIconVisible,
           title: title,
           onPressed: () {
             onPressed();

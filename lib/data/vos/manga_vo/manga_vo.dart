@@ -79,4 +79,9 @@ class MangaVO {
     data['draft'] = draft;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'MangaVO{mangaId: $mangaId, chptCount: $chptCount, mangaTitle: $mangaTitle, mangaCover: $mangaCover, mangaDisp: $mangaDisp, mangaLikeCount: $mangaLikeCount, created: $created, categoryId: $categoryId, categoryName: $categoryName, draft: $draft, isFavorite: $isFavorite}';
+  }
 }

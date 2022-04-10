@@ -25,4 +25,6 @@ class LightNovelDAO {
 
   List<LightNovelVO>? getAllLightNovels() =>
       _getLightNovelBox().values.toList();
+
+  LightNovelVO getLightNovelByID(String id)=>_getLightNovelBox().values.toList().where((element) => element.lightnovelId.toString()==id).first;
 }

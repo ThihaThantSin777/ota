@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:ota/data/vos/article_vo/article_vo.dart';
-import 'package:ota/pages/read_one_article_page.dart';
+import 'package:ota/data/vos/manga_vo/manga_vo.dart';
+import 'package:ota/screens/read_one_manga_page.dart';
 import 'package:ota/resources/const_string.dart';
 import 'package:ota/view_point/details_view/search_textfield_view.dart';
-import 'package:ota/view_point/details_view/show_all_article_view.dart';
+import 'package:ota/view_point/details_view/show_all_manga_view.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/show_more_page_provider.dart';
 
-class ShowMoreArticlePage extends StatelessWidget {
-  const ShowMoreArticlePage({Key? key, required this.title}) : super(key: key);
+class ShowMoreMangaPage extends StatelessWidget {
+  const ShowMoreMangaPage({Key? key, required this.title}) : super(key: key);
   final String title;
-  void navigateToReadOneMangaPage(ArticleVO articleVO, context) {
+  void navigateToReadOneMangaPage(MangaVO mangaVO, context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ReadArticlePage(
-              articleVO: articleVO,
+        builder: (context) => ReadOneMangaPage(
+              mangaVO: mangaVO,
             )));
   }
 
@@ -35,23 +35,23 @@ class ShowMoreArticlePage extends StatelessWidget {
                   ? const Center(
                       child: Text(noInternetStatus),
                     )
-                  : Selector<ShowMorePageProvider, List<ArticleVO>?>(
+                  : Selector<ShowMorePageProvider, List<MangaVO>?>(
                       selector: (_, showMorePageProvider) =>
-                          showMorePageProvider.getArticleList,
-                      builder: (_, articleList, child) {
+                          showMorePageProvider.getMangaList,
+                      builder: (_, mangaList, child) {
                         ShowMorePageProvider showMorePageProvider =
                             Provider.of(_, listen: false);
                         return Column(
                           children: [
                             SearchTextFieldView(
                               onChanged: (value) {
-                                showMorePageProvider.searchArticle(value);
+                                showMorePageProvider.searchManga(value);
                               },
                             ),
-                            ShowAllArticleView(
-                              articleList: articleList ?? [],
-                              onTap: (articleVO) => navigateToReadOneMangaPage(
-                                  articleVO, context),
+                            ShowAllMangaView(
+                              mangaList: mangaList ?? [],
+                              onTap: (mangaVO) =>
+                                  navigateToReadOneMangaPage(mangaVO, context),
                             )
                           ],
                         );

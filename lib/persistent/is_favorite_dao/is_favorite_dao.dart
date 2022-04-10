@@ -11,18 +11,25 @@ class IsFavoriteDAO {
     return _getIsFavoriteBox().watch();
   }
 
-  void saveIsFavorite(String managaID, bool isFavorite) {
-    _getIsFavoriteBox().put(managaID, isFavorite);
+  void saveIsFavorite(String id, bool isFavorite,String keyword) {
+    String keyID='$id-$keyword';
+    _getIsFavoriteBox().put(keyID, isFavorite);
     print('Save Is Favorite');
+
   }
 
-  bool? isFavoriteByID(String mangaID) {
-    return _getIsFavoriteBox().get(mangaID);
+  bool? isFavoriteByID(String id,String keyword) {
+    String keyID='$id-$keyword';
+    return _getIsFavoriteBox().get(keyID);
   }
 
-  void removeIsFavorite(String mnagaID) {
-    if (isFavoriteByID(mnagaID) ?? false) {
-      _getIsFavoriteBox().delete(mnagaID);
+  void removeIsFavorite(String id,String keyword) {
+    if (isFavoriteByID(id,keyword) ?? false) {
+      String keyID='$id-$keyword';
+      _getIsFavoriteBox().delete(keyID);
     }
   }
+
+  bool isBoxEmpty()=>_getIsFavoriteBox().isEmpty;
+  List<dynamic>getFavoriteIDs(String keyword)=>_getIsFavoriteBox().keys.toList().where((element) => element.contains(keyword)).map((e) => e.split('-')[0]).toList();
 }

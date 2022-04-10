@@ -61,9 +61,11 @@ class LightNovelDescriptionView extends StatelessWidget {
 
 class LightNovelSilverAppBarAndImageView extends StatelessWidget {
   const LightNovelSilverAppBarAndImageView(
-      {Key? key, required this.lightNovelVO})
+      {Key? key, required this.lightNovelVO,required this.isFavorite,required this.onPressed})
       : super(key: key);
   final LightNovelVO lightNovelVO;
+  final Function onPressed;
+  final bool isFavorite;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -85,9 +87,18 @@ class LightNovelSilverAppBarAndImageView extends StatelessWidget {
           ),
         ),
       ),
-      actions: const [
-        Icon(Icons.favorite_border_outlined),
-        SizedBox(width: spacing1x)
+      actions:  [
+       IconButton(
+           onPressed: () {
+             onPressed();
+           },
+           icon: isFavorite
+               ? const Icon(Icons.favorite)
+               : const Icon(
+             Icons.favorite_border_outlined,
+           )),
+
+        const SizedBox(width: spacing1x)
       ],
     );
   }

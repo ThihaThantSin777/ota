@@ -45,7 +45,7 @@ class MangaTitleView extends StatelessWidget {
       mangaTitle.toString(),
       textAlign: TextAlign.center,
       style: const TextStyle(
-          fontSize: fontSizeregular1x, fontWeight: FontWeight.w500),
+          fontSize: fontSizeregularx, fontWeight: FontWeight.w500),
     )));
   }
 }
@@ -59,19 +59,16 @@ class MangaImageView extends StatelessWidget {
         flex: 3,
         child: SizedBox(
           width: double.infinity,
-          child: Hero(
-            tag: mangaCover,
-            child: Image.network(
-              mangaCover,
-              fit: BoxFit.fill,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
+          child: Image.network(
+            mangaCover,
+            fit: BoxFit.fill,
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) return child;
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
         ));
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ota/data/vos/light_novel_vo/light_novel_vo.dart';
 import 'package:ota/data/vos/read_chapter_vo/read_chapter_light_novle_vo.dart';
-import 'package:ota/pages/read_light_novel_content_page.dart';
+import 'package:ota/screens/read_light_novel_content_page.dart';
 import 'package:ota/providers/read_light_novel_provider.dart';
 import 'package:ota/resources/const_string.dart';
 import 'package:ota/resources/dimension.dart';
@@ -35,8 +35,23 @@ class ReadOneLightNovelPage extends StatelessWidget {
                   )
                 : CustomScrollView(
                     slivers: [
-                      LightNovelSilverAppBarAndImageView(
-                          lightNovelVO: lightNovelVO),
+                      Selector<ReadLighrNovelProvider,bool>(
+                        selector: (_, readLighrNovelProvider) =>
+                        readLighrNovelProvider.getIsFavorite,
+                        builder: (_,isFavorite,child){
+                          ReadLighrNovelProvider readLightNovelProvider=Provider.of(_,listen: false);
+                          return LightNovelSilverAppBarAndImageView(
+                              lightNovelVO: lightNovelVO,
+                              onPressed: () {
+                                readLightNovelProvider.changeFavorite(
+                                    lightNovelVO.lightnovelId.toString(), isFavorite);
+                              },
+                              isFavorite: isFavorite,
+
+                          );
+                        }
+
+                      ),
                       Selector<ReadLighrNovelProvider, List<ReadLightNovelVO>?>(
                         selector: (_, readLightNovelProvider) =>
                             readLightNovelProvider.getReadLightNovel,

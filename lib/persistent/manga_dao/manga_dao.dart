@@ -21,4 +21,6 @@ class MangaDAO {
   }
 
   List<MangaVO>? getAllMangas() => _getMangaBox().values.toList();
+
+  MangaVO getMangaByID(String id)=>_getMangaBox().values.toList().where((element) => element.mangaId.toString()==id).first;
 }

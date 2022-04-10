@@ -45,19 +45,16 @@ class ArticleImageView extends StatelessWidget {
       flex: flexRate,
       child: SizedBox(
         width: double.infinity,
-        child: Hero(
-          tag: imageURL,
-          child: Image.network(
-            imageURL,
-            fit: BoxFit.cover,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
+        child: Image.network(
+          imageURL,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) return child;
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
         ),
       ),
     );

@@ -6,6 +6,8 @@ const spacing2x = 20.0;
 
 const spacing4x = 45.0;
 
+const fontSizeregularx=13.0;
+
 const fontSizeregular1x = 15.0;
 
 const fontSizeregular2x = 20.0;

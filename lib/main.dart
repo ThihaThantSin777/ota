@@ -4,8 +4,13 @@ import 'package:ota/data/vos/article_vo/article_vo.dart';
 import 'package:ota/data/vos/banner_vo/banner_vo.dart';
 import 'package:ota/data/vos/light_novel_vo/light_novel_vo.dart';
 import 'package:ota/data/vos/manga_vo/manga_vo.dart';
-import 'package:ota/pages/home_page.dart';
+import 'package:ota/persistent/is_favorite_dao/is_favorite_dao.dart';
+import 'package:ota/providers/home_page_provider.dart';
+import 'package:ota/screens/favorite_page.dart';
+import 'package:ota/screens/home_page.dart';
 import 'package:ota/persistent/hive_constant.dart';
+import 'package:ota/resources/const_string.dart';
+import 'package:provider/provider.dart';
 
 main() async {
   await Hive.initFlutter();
@@ -20,17 +25,61 @@ main() async {
   await Hive.openBox<LightNovelVO>(boxNameForLightNovelVO);
   await Hive.openBox<ArticleVO>(boxNameForArticleVO);
   await Hive.openBox<bool>(boxNameForIsFavorite);
+
   runApp(MyApp());
+  print(IsFavoriteDAO().isBoxEmpty());
+
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
+  List<BottomNavigationBarItem> navigationItems = const [
+    BottomNavigationBarItem(
+        icon: Icon(Icons.home), label: bottomNavigationBarItemHomeLabel),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.favorite),
+        label: bottomNavigationBarItemFavoriteLabel),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.download), label: bottomNavigationBarDownloadLabel),
+  ];
+  final widgets= [
+   const HomePage(),
+    FavoritePage(),
+  ];
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    );
+    return ChangeNotifierProvider<HomePageProvider>(
+         create: (_)=>HomePageProvider(),
+         child: MaterialApp(
+          title: 'OTA MYANMAR',
+          debugShowCheckedModeBanner: false,
+          home: Selector<HomePageProvider,int>(
+            selector: (_,homePageProvider)=>homePageProvider.getChangePage,
+            builder: (_,index,child){
+              HomePageProvider homePageProvider=Provider.of(_,listen: false);
+              return  Scaffold(
+                  bottomNavigationBar: BottomNavigationBar(
+                    currentIndex: index,
+                    selectedItemColor: Colors.indigo,
+                    unselectedItemColor: Colors.grey,
+                    onTap: (index)=>homePageProvider.setChangePage=index,
+                    items: navigationItems,
+                  ),
+                  appBar: AppBar(
+                    backgroundColor: Colors.indigo,
+                    centerTitle: true,
+                    title: const Text(appTitle),
+                  ),
+                  body:
+                  IndexedStack(
+                    index: index,
+                    children: widgets,
+                  )
+              );
+            }
+
+          ),
+      ),
+       );
+
   }
 }

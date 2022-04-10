@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ota/data/vos/light_novel_vo/light_novel_vo.dart';
-import 'package:ota/pages/read_one_light_novel_page.dart';
+import 'package:ota/screens/read_one_light_novel_page.dart';
 import 'package:ota/resources/const_string.dart';
 import 'package:ota/view_point/details_view/search_textfield_view.dart';
 import 'package:ota/view_point/details_view/show_all_light_novel_view.dart';

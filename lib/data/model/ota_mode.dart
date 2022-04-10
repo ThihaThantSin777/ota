@@ -28,9 +28,25 @@ abstract class OTAModel {
   Stream<List<LightNovelVO>?> getLightNovelFromPersistent();
   Stream<List<ArticleVO>?> getArticleFromPersistent();
 
-  void saveIsFavorite(String managaID, bool isFavorite);
+  void saveIsFavorite(String id, bool isFavorite,String keyword);
 
-  void removeFavorite(String managaID);
+  void removeFavorite(String id,String keyword);
 
-  bool? isFavorite(String managaID);
+  bool? isFavorite(String id,String keyword);
+
+  Stream<void>getFavoriteStream();
+
+  List<MangaVO>?getMangaFavorite();
+
+  MangaVO? getMangaByID(String id);
+
+  List<LightNovelVO>?getLightNovelFavorite();
+
+  LightNovelVO? getLightNovelByID(String id);
+
+  List<ArticleVO>?getArticleFavorite();
+
+  ArticleVO? getArticleByID(String id);
+
+  bool isFavoriteAllEmpty();
 }

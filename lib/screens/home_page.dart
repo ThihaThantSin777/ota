@@ -5,12 +5,12 @@ import 'package:ota/data/vos/article_vo/article_vo.dart';
 import 'package:ota/data/vos/banner_vo/banner_vo.dart';
 import 'package:ota/data/vos/light_novel_vo/light_novel_vo.dart';
 import 'package:ota/data/vos/manga_vo/manga_vo.dart';
-import 'package:ota/pages/read_one_article_page.dart';
-import 'package:ota/pages/read_one_light_novel_page.dart';
-import 'package:ota/pages/read_one_manga_page.dart';
-import 'package:ota/pages/show_more_article_page.dart';
-import 'package:ota/pages/show_more_light_novel_page.dart';
-import 'package:ota/pages/show_more_manga_page.dart';
+import 'package:ota/screens/read_one_article_page.dart';
+import 'package:ota/screens/read_one_light_novel_page.dart';
+import 'package:ota/screens/read_one_manga_page.dart';
+import 'package:ota/screens/show_more_article_page.dart';
+import 'package:ota/screens/show_more_light_novel_page.dart';
+import 'package:ota/screens/show_more_manga_page.dart';
 import 'package:ota/providers/home_page_provider.dart';
 import 'package:ota/resources/const_string.dart';
 import 'package:ota/resources/dimension.dart';
@@ -20,47 +20,20 @@ import 'package:ota/view_point/lightnovel_view/light_novel_view.dart';
 import 'package:ota/view_point/manga_view/manga_session_view.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  List<BottomNavigationBarItem> navigationItems = const [
-    BottomNavigationBarItem(
-        icon: Icon(Icons.home), label: bottomNavigationBarItemHomeLabel),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.favorite),
-        label: bottomNavigationBarItemFavoriteLabel),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.download), label: bottomNavigationBarDownloadLabel),
-  ];
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => HomePageProvider(),
-        child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
-              backgroundColor: Colors.indigo,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.grey,
-              items: navigationItems),
-          appBar: AppBar(
-            backgroundColor: Colors.indigo,
-            centerTitle: true,
-            title: const Text(appTitle),
-          ),
-          body: MainHomePageView(),
-        ));
-  }
+  State<HomePage> createState() => _HomePageState();
 }
 
-class MainHomePageView extends StatefulWidget {
-  const MainHomePageView({Key? key}) : super(key: key);
+class _HomePageState extends State<HomePage> {
 
-  @override
-  State<MainHomePageView> createState() => _MainHomePageViewState();
-}
-
-class _MainHomePageViewState extends State<MainHomePageView> {
   final pageController = PageController();
-
+  final mangaController=ScrollController();
+  final lightNovelController=ScrollController();
+  final articleController=PageController();
+  final mainController=ScrollController();
   void onDotClicked(int index) {
     pageController.animateToPage(index,
         duration: const Duration(seconds: 2), curve: Curves.bounceOut);
@@ -76,11 +49,13 @@ class _MainHomePageViewState extends State<MainHomePageView> {
         _currentPage = 0;
       }
 
-      pageController.animateToPage(
-        _currentPage,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeIn,
-      );
+      if( pageController.hasClients){
+        pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(seconds: 5),
+          curve: Curves.easeIn,
+        );
+      }
     });
 
     super.initState();
@@ -89,6 +64,10 @@ class _MainHomePageViewState extends State<MainHomePageView> {
   @override
   void dispose() {
     pageController.dispose();
+    mainController.dispose();
+    mangaController.dispose();
+    lightNovelController.dispose();
+    articleController.dispose();
     super.dispose();
   }
 
@@ -127,26 +106,30 @@ class _MainHomePageViewState extends State<MainHomePageView> {
 
   @override
   Widget build(BuildContext context) {
+
     return Selector<HomePageProvider, bool>(
-      selector: (_, homePageProvider) => homePageProvider.getNoInternetStatus,
+      selector: (_, homePageProvider) =>
+          homePageProvider.getNoInternetStatus,
       builder: (_, status, child) => status
           ? const Center(
               child: Text(noInternetStatus),
             )
           : ListView(
+        controller: mainController,
               children: [
                 Selector<HomePageProvider, List<BannerVO>?>(
                   selector: (_, homePageProvider) =>
                       homePageProvider.getBannerList,
-                  builder: (_, bannerList, child) => bannerList?.isEmpty ?? true
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : BannerSessionView(
-                          bannerList: bannerList ?? [],
-                          pageController: pageController,
-                          onDotClick: (index) => onDotClicked(index),
-                        ),
+                  builder: (_, bannerList, child) =>
+                      bannerList?.isEmpty ?? true
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : BannerSessionView(
+                              bannerList: bannerList ?? [],
+                              pageController: pageController,
+                              onDotClick: (index) => onDotClicked(index),
+                            ),
                 ),
                 const SizedBox(
                   height: spacing1x,
@@ -169,6 +152,7 @@ class _MainHomePageViewState extends State<MainHomePageView> {
                               onTap: (managVO) {
                                 navigateToReadOneMangaPage(managVO);
                               },
+                        controller: mangaController,
                             );
                     }),
                 const SizedBox(
@@ -177,47 +161,53 @@ class _MainHomePageViewState extends State<MainHomePageView> {
                 Selector<HomePageProvider, List<LightNovelVO>?>(
                     selector: (_, homePageProvider) =>
                         homePageProvider.getLightNovelList,
-                    builder: (_, lightNovelList, child) =>
-                        lightNovelList?.isEmpty ?? true
-                            ? const Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : LightNovelSessionView(
-                                lightNovelVO:
-                                    lightNovelList?.take(5).toList() ?? [],
-                                title: lightNovelSessionTitle,
-                                onPressed: () {
-                                  navigateToShowMoreLightNovelPage(
-                                      context, lightNovelSessionTitle);
-                                },
-                                onTap: (lightNovelVO) {
-                                  navigateToReadOneLighrNovelPage(lightNovelVO);
-                                },
-                              )),
+                    builder: (_, lightNovelList, child) => lightNovelList
+                                ?.isEmpty ??
+                            true
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : LightNovelSessionView(
+                            lightNovelVO:
+                                lightNovelList?.take(5).toList() ?? [],
+                            title: lightNovelSessionTitle,
+                            onPressed: () {
+                              navigateToShowMoreLightNovelPage(
+                                  context, lightNovelSessionTitle);
+                            },
+                            onTap: (lightNovelVO) {
+                              navigateToReadOneLighrNovelPage(lightNovelVO);
+                            },
+                      controller: lightNovelController,
+                          )
+                ),
                 const SizedBox(
                   height: spacing1x,
                 ),
                 Selector<HomePageProvider, List<ArticleVO>?>(
                     selector: (_, homePageProvider) =>
                         homePageProvider.getArticleList,
-                    builder: (_, articleList, child) => articleList?.isEmpty ??
-                            true
-                        ? const Center(
-                            child: CircularProgressIndicator(),
-                          )
-                        : ArticleSessionView(
-                            articleList: articleList?.take(5).toList() ?? [],
-                            title: articleSessionTitle,
-                            onPressed: () {
-                              navigateToShowMoreArticlePage(
-                                context,
-                                articleSessionTitle,
-                              );
-                            },
-                            onTap: (articleVO) {
-                              navigateToReadOneArticlePage(articleVO);
-                            },
-                          )),
+                    builder: (_, articleList, child) =>
+                        articleList?.isEmpty ?? true
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : ArticleSessionView(
+                                articleList:
+                                    articleList?.take(5).toList() ?? [],
+                                title: articleSessionTitle,
+                                onPressed: () {
+                                  navigateToShowMoreArticlePage(
+                                    context,
+                                    articleSessionTitle,
+                                  );
+                                },
+                                onTap: (articleVO) {
+                                  navigateToReadOneArticlePage(articleVO);
+                                },
+                          controller:articleController,
+                              )
+                ),
               ],
             ),
     );

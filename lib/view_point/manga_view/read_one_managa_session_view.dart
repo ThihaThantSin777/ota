@@ -82,12 +82,9 @@ class SilverAppBarAndImageView extends StatelessWidget {
           style: const TextStyle(fontSize: fontSizeregular1x),
         ),
         centerTitle: true,
-        background: Hero(
-          tag: mangaVO.mangaCover.toString(),
-          child: Image.network(
-            mangaVO.mangaCover.toString(),
-            fit: BoxFit.cover,
-          ),
+        background: Image.network(
+          mangaVO.mangaCover.toString(),
+          fit: BoxFit.cover,
         ),
       ),
       actions: [

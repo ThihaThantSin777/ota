@@ -16,30 +16,15 @@ class HomePageProvider extends ChangeNotifier {
   List<LightNovelVO>? _lightNovelList;
   List<ArticleVO>? _articleList;
   bool _isNoInternet = false;
-  bool? _isFavorite;
+  int _chnagePageIndex = 0;
 
-  void setisFavorite(String mangaID) {
-    if (_otaModel.isFavorite(mangaID) ?? false) {
-      setFavorite = true;
-      notifyListeners();
-    } else {
-      setFavorite = false;
-      notifyListeners();
-    }
-  }
-
-  void changeFavorite(String managaID, bool isFavorite) {
-    if (isFavorite) {
-      _otaModel.removeFavorite(managaID);
-    } else {
-      _otaModel.saveIsFavorite(managaID, !isFavorite);
-    }
-    setFavorite = !isFavorite;
+  set setChangePage(int changePageIndex) {
+    _chnagePageIndex = changePageIndex;
     notifyListeners();
   }
 
-  get getIsFavorite => _isFavorite;
-  set setFavorite(bool isFavorite) => _isFavorite = isFavorite;
+  get getChangePage => _chnagePageIndex;
+
   set setBannerList(List<BannerVO>? bannerVOList) =>
       _bannerVOList = bannerVOList;
 
@@ -77,8 +62,7 @@ class HomePageProvider extends ChangeNotifier {
 
   List<ArticleVO>? get getArticleList => _articleList;
 
-  HomePageProvider({String mangaID = ''}) {
-    setisFavorite(mangaID);
+  HomePageProvider() {
     getWifiOrMobielStatus();
     _otaModel.getBannerFromPersistent().listen((banners) {
       setBannerList = banners;
@@ -99,10 +83,5 @@ class HomePageProvider extends ChangeNotifier {
       setArticleList = article;
       notifyListeners();
     }, onError: (error) => print(error));
-
-    _otaModel.getArticleFromNetwork().then((article) {
-      setArticleList = article;
-      notifyListeners();
-    }).catchError((error) => print(error));
   }
 }

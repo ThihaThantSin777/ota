@@ -24,9 +24,11 @@ class LightNovelChapterView extends StatelessWidget {
 }
 
 class ArticleSilverAppBarAndImageView extends StatelessWidget {
-  const ArticleSilverAppBarAndImageView({Key? key, required this.articleVO})
+  const ArticleSilverAppBarAndImageView({Key? key, required this.articleVO,required this.isFavorite,required this.onPressed})
       : super(key: key);
   final ArticleVO articleVO;
+  final Function onPressed;
+  final bool isFavorite;
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -40,17 +42,23 @@ class ArticleSilverAppBarAndImageView extends StatelessWidget {
           style: const TextStyle(fontSize: fontSizeregular1x),
         ),
         centerTitle: true,
-        background: Hero(
-          tag: articleVO.artThumb.toString(),
-          child: Image.network(
-            articleVO.artThumb.toString(),
-            fit: BoxFit.cover,
-          ),
+        background: Image.network(
+          articleVO.artThumb.toString(),
+          fit: BoxFit.cover,
         ),
       ),
-      actions: const [
-        Icon(Icons.favorite_border_outlined),
-        SizedBox(width: spacing1x)
+      actions:  [
+        IconButton(
+            onPressed: () {
+              onPressed();
+            },
+            icon: isFavorite
+                ? const Icon(Icons.favorite)
+                : const Icon(
+              Icons.favorite_border_outlined,
+            )),
+
+        const  SizedBox(width: spacing1x)
       ],
     );
   }

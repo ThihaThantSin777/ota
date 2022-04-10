@@ -1,4 +1,3 @@
-import 'package:ota/data/vos/read_chapter_vo/read_chapter_light_novle_vo.dart';
 import 'package:ota/network/response/article_response/article_response.dart';
 import 'package:ota/network/response/article_response/read_article_response.dart';
 import 'package:ota/network/response/banner_response/banner_response.dart';

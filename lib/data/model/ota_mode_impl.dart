@@ -15,6 +15,7 @@ import 'package:ota/persistent/banner_dao/banner_dao.dart';
 import 'package:ota/persistent/is_favorite_dao/is_favorite_dao.dart';
 import 'package:ota/persistent/light_novel_dao/light_novel_dao.dart';
 import 'package:ota/persistent/manga_dao/manga_dao.dart';
+import 'package:ota/resources/const_string.dart';
 
 class OTAModelImpl extends OTAModel {
   OTAModelImpl.internal();
@@ -122,17 +123,79 @@ class OTAModelImpl extends OTAModel {
       _otaApiDataAgent.readManagaCotent(chptID);
 
   @override
-  void removeFavorite(String managaID) {
-    _isFavoriteDAO.removeIsFavorite(managaID);
+  void removeFavorite(String id,String keyword) {
+    _isFavoriteDAO.removeIsFavorite(id,keyword);
   }
 
   @override
-  void saveIsFavorite(String managaID, bool isFavorite) {
-    _isFavoriteDAO.saveIsFavorite(managaID, isFavorite);
+  void saveIsFavorite(String id, bool isFavorite,String keyword) {
+    _isFavoriteDAO.saveIsFavorite(id, isFavorite,keyword);
   }
 
   @override
-  bool? isFavorite(String managaID) {
-    return _isFavoriteDAO.isFavoriteByID(managaID);
+  bool? isFavorite(String id,String keyword) {
+    return _isFavoriteDAO.isFavoriteByID(id,keyword);
   }
+
+
+  @override
+  MangaVO? getMangaByID(String id) {
+   return _mangaDAO.getMangaByID('$id-$keyManga');
+  }
+
+  @override
+  Stream<void> getFavoriteStream() {
+    return _isFavoriteDAO.getIsFavooriteBoxStream();
+  }
+
+  @override
+  List<MangaVO>? getMangaFavorite() {
+    List<MangaVO>list=[];
+    List<dynamic>getIDs=_isFavoriteDAO.getFavoriteIDs(keyManga);
+    for (var managaID in getIDs) {
+      MangaVO? mangaVO= _mangaDAO.getMangaByID(managaID);
+
+      list.add(mangaVO);
+    }
+    return list;
+  }
+
+  @override
+  LightNovelVO? getLightNovelByID(String id) {
+    return _lightNovelDAO.getLightNovelByID('$id-$keyLightNovel');
+  }
+
+  @override
+  List<LightNovelVO>? getLightNovelFavorite() {
+    List<LightNovelVO>list=[];
+    List<dynamic>getIDs=_isFavoriteDAO.getFavoriteIDs(keyLightNovel);
+    for (var lightNovelID in getIDs) {
+      LightNovelVO? lightNovelVO= _lightNovelDAO.getLightNovelByID(lightNovelID);
+
+      list.add(lightNovelVO);
+    }
+    return list;
+  }
+
+  @override
+  ArticleVO? getArticleByID(String id) {
+    return _articleDAO.getArticleByID('$id-$keyArticle');
+  }
+
+  @override
+  List<ArticleVO>? getArticleFavorite() {
+    List<ArticleVO>list=[];
+    List<dynamic>getIDs=_isFavoriteDAO.getFavoriteIDs(keyArticle);
+    for (var artID in getIDs) {
+      ArticleVO? articleVO= _articleDAO.getArticleByID(artID);
+
+      list.add(articleVO);
+    }
+    return list;
+  }
+
+  @override
+  bool isFavoriteAllEmpty() =>_isFavoriteDAO.isBoxEmpty();
+
+
 }

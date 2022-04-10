@@ -23,3 +23,9 @@ const defaultDescription = 'Default Description';
 const chapterConstant = 'Chapter';
 
 const noInternetStatus = 'No Internet.Please open the WIFI or Mobile Data';
+
+const keyManga='Manga';
+
+const keyLightNovel='LightNovel';
+
+const keyArticle='Article';
