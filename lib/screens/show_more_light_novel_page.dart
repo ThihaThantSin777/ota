@@ -21,8 +21,8 @@ class ShowMoreLightNovelPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => ShowMorePageProvider(),
+    return ChangeNotifierProvider.value(
+        value: ShowMorePageProvider(),
         child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.indigo,

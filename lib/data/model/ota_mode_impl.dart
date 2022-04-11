@@ -15,6 +15,7 @@ import 'package:ota/persistent/banner_dao/banner_dao.dart';
 import 'package:ota/persistent/is_favorite_dao/is_favorite_dao.dart';
 import 'package:ota/persistent/light_novel_dao/light_novel_dao.dart';
 import 'package:ota/persistent/manga_dao/manga_dao.dart';
+import 'package:ota/persistent/page_index_dao/page_index_dao.dart';
 import 'package:ota/resources/const_string.dart';
 
 class OTAModelImpl extends OTAModel {
@@ -28,6 +29,7 @@ class OTAModelImpl extends OTAModel {
   final LightNovelDAO _lightNovelDAO = LightNovelDAO();
   final ArticleDAO _articleDAO = ArticleDAO();
   final IsFavoriteDAO _isFavoriteDAO = IsFavoriteDAO();
+  final PageIndexDAO _pageIndexDAO=PageIndexDAO();
 
   @override
   Future<List<BannerVO>?> getBannerFromNetwork() =>
@@ -196,6 +198,17 @@ class OTAModelImpl extends OTAModel {
 
   @override
   bool isFavoriteAllEmpty() =>_isFavoriteDAO.isBoxEmpty();
+
+  @override
+  int getPageIndexByID(String id) {
+    return _pageIndexDAO.getPageIndexByID(id)??0;
+  }
+
+  @override
+  void savePageIndex(int index, String id) {
+    _pageIndexDAO.savePageIndex(id, index);
+  }
+
 
 
 }

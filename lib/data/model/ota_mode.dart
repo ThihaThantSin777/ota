@@ -49,4 +49,9 @@ abstract class OTAModel {
   ArticleVO? getArticleByID(String id);
 
   bool isFavoriteAllEmpty();
+
+  void savePageIndex(int index,String id);
+
+  int getPageIndexByID(String id);
+
 }

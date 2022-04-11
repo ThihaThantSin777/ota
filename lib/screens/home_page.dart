@@ -41,9 +41,12 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    HomePageProvider homePageProvider=context.read();
     int _currentPage = 0;
+
     Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < 3) {
+      int length=homePageProvider.getBannerList?.length??0;
+      if (_currentPage < length-1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -103,6 +106,8 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ReadArticlePage(articleVO: articleVO)));
   }
+
+
 
   @override
   Widget build(BuildContext context) {

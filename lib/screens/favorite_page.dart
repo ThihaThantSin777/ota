@@ -40,6 +40,7 @@ class _FavoritePageState extends State<FavoritePage> {
         builder: (context) => ReadArticlePage(articleVO: articleVO)));
   }
 
+
   @override
   void dispose() {
     mangaController.dispose();
@@ -50,10 +51,18 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   Widget build(BuildContext context) {
-    print('Favorite page is build');
     return ChangeNotifierProvider(
       create: (_) => FavoritePageProvider(),
-      child: Selector<FavoritePageProvider, bool?>(
+      child: Selector<FavoritePageProvider, bool>(
+      selector: (_, homePageProvider) =>
+      homePageProvider.getNoInternetStatus,
+      builder: (_, status, child) => status
+      ? const Center(
+      child: Text(noInternetStatus),
+      )
+          :
+
+      Selector<FavoritePageProvider, bool?>(
         selector: (_,favoritePageProvider)=>favoritePageProvider.getIsAllEmpty,
         builder: (_,isAllEmpty,child)=>
          isAllEmpty??true?const Center(child: Text('There is no favorite book'),):
@@ -118,6 +127,6 @@ class _FavoritePageState extends State<FavoritePage> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

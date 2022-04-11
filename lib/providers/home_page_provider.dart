@@ -17,71 +17,86 @@ class HomePageProvider extends ChangeNotifier {
   List<ArticleVO>? _articleList;
   bool _isNoInternet = false;
   int _chnagePageIndex = 0;
+  String _selectText='Home';
 
-  set setChangePage(int changePageIndex) {
-    _chnagePageIndex = changePageIndex;
+  set setSelectText(String selectText) {
+    _selectText = selectText;
     notifyListeners();
   }
 
-  get getChangePage => _chnagePageIndex;
+    String get getSelectText=>_selectText;
 
-  set setBannerList(List<BannerVO>? bannerVOList) =>
-      _bannerVOList = bannerVOList;
 
-  List<BannerVO>? get getBannerList => _bannerVOList;
+    bool  getIsSelect(String text){
 
-  set setMangaList(List<MangaVO>? mangaVOList) => _mangaVOList = mangaVOList;
+      return text==getSelectText?true:false;
+    }
 
-  List<MangaVO>? get getMangaList => _mangaVOList;
+    set setChangePage(int changePageIndex) {
+      _chnagePageIndex = changePageIndex;
+      notifyListeners();
+    }
 
-  set setNoInternetStatus(bool isNoInternet) {
-    _isNoInternet = isNoInternet;
-    notifyListeners();
+    get getChangePage => _chnagePageIndex;
+
+    set setBannerList(List<BannerVO>? bannerVOList) =>
+        _bannerVOList = bannerVOList;
+
+    List<BannerVO>? get getBannerList => _bannerVOList;
+
+    set setMangaList(List<MangaVO>? mangaVOList) => _mangaVOList = mangaVOList;
+
+    List<MangaVO>? get getMangaList => _mangaVOList;
+
+    set setNoInternetStatus(bool isNoInternet) {
+      _isNoInternet = isNoInternet;
+      notifyListeners();
+    }
+
+    bool get getNoInternetStatus => _isNoInternet;
+
+    Future getWifiOrMobielStatus() async {
+      Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+        if (result == ConnectivityResult.none) {
+          setNoInternetStatus = true;
+        } else if (result == ConnectivityResult.wifi ||
+            result == ConnectivityResult.mobile) {
+          setNoInternetStatus = false;
+        }
+      });
+    }
+
+    set setLightNovelList(List<LightNovelVO>? lightNovelList) =>
+        _lightNovelList = lightNovelList;
+
+    List<LightNovelVO>? get getLightNovelList => _lightNovelList;
+
+    set setArticleList(List<ArticleVO>? articleList) =>
+        _articleList = articleList;
+
+    List<ArticleVO>? get getArticleList => _articleList;
+
+    HomePageProvider() {
+      getWifiOrMobielStatus();
+      _otaModel.getBannerFromPersistent().listen((banners) {
+        setBannerList = banners;
+        notifyListeners();
+      }, onError: (error) => print(error));
+
+      _otaModel.getMangaFromPersistent().listen((mangas) {
+        setMangaList = mangas;
+        notifyListeners();
+      }, onError: (error) => print(error));
+
+      _otaModel.getLightNovelFromPersistent().listen((lightNovel) {
+        setLightNovelList = lightNovel;
+        notifyListeners();
+      }, onError: (error) => print(error));
+
+      _otaModel.getArticleFromPersistent().listen((article) {
+        setArticleList = article;
+        notifyListeners();
+      }, onError: (error) => print(error));
+    }
   }
 
-  bool get getNoInternetStatus => _isNoInternet;
-
-  Future getWifiOrMobielStatus() async {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setNoInternetStatus = true;
-      } else if (result == ConnectivityResult.wifi ||
-          result == ConnectivityResult.mobile) {
-        setNoInternetStatus = false;
-      }
-    });
-  }
-
-  set setLightNovelList(List<LightNovelVO>? lightNovelList) =>
-      _lightNovelList = lightNovelList;
-
-  List<LightNovelVO>? get getLightNovelList => _lightNovelList;
-
-  set setArticleList(List<ArticleVO>? articleList) =>
-      _articleList = articleList;
-
-  List<ArticleVO>? get getArticleList => _articleList;
-
-  HomePageProvider() {
-    getWifiOrMobielStatus();
-    _otaModel.getBannerFromPersistent().listen((banners) {
-      setBannerList = banners;
-      notifyListeners();
-    }, onError: (error) => print(error));
-
-    _otaModel.getMangaFromPersistent().listen((mangas) {
-      setMangaList = mangas;
-      notifyListeners();
-    }, onError: (error) => print(error));
-
-    _otaModel.getLightNovelFromPersistent().listen((lightNovel) {
-      setLightNovelList = lightNovel;
-      notifyListeners();
-    }, onError: (error) => print(error));
-
-    _otaModel.getArticleFromPersistent().listen((article) {
-      setArticleList = article;
-      notifyListeners();
-    }, onError: (error) => print(error));
-  }
-}

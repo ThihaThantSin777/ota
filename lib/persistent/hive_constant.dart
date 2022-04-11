@@ -9,3 +9,4 @@ const boxNameForMangaVO = 'BOX_NAME_MANGA_VO';
 const boxNameForLightNovelVO = 'BOX_NAME_LIGHT_NOVEL_VO';
 const boxNameForArticleVO = 'BOX_NAME_ARTICLE_VO';
 const boxNameForIsFavorite = 'BOX_NAME_IS_FAVORITE';
+const boxNameForPageIndex='BOX_NAME_PAGE_INDEX';

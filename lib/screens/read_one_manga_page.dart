@@ -8,15 +8,22 @@ import 'package:ota/resources/dimension.dart';
 import 'package:ota/view_point/manga_view/read_one_managa_session_view.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/read_manga_content_provider.dart';
+
 class ReadOneMangaPage extends StatelessWidget {
   const ReadOneMangaPage({Key? key, required this.mangaVO}) : super(key: key);
   final MangaVO mangaVO;
 
   void navigateToMangaContent(ReadChapterVO readChapterVO, context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ReadMangaContentPage(
-            chptID: readChapterVO.chptId.toString(),
-            title: readChapterVO.chptSum.toString())));
+        builder: (context) =>
+            ChangeNotifierProvider(
+                create: (_) =>
+                    ReadMangaContentProvider(readChapterVO.chptId.toString()),
+                child: ReadMangaContentPage(readChapterVO: readChapterVO)
+            )
+    )
+    );
   }
 
   @override
